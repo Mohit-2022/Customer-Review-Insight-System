@@ -69,7 +69,7 @@ elif choice == "Bulk Review Analysis":
             st.error("Uploaded file must contain a column named 'Review'")
             st.write("Your columns are:", list(df.columns))
             st.stop()
-        
+        df['review'] = df['review'].fillna('').astype(str)
         df['Cleaned'] = df['review'].apply(clean_text)
         vector = vectorizer.transform(df['Cleaned'])
         
