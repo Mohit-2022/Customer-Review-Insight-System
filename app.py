@@ -56,35 +56,46 @@ elif choice == "Bulk Review Analysis":
     
     if uploaded_file is not None:
         
-        df = pd.read_csv(uploaded_file)
-        
-        df['Cleaned'] = df['Review'].apply(clean_text)
-        vector = vectorizer.transform(df['Cleaned'])
-        
-        df['Prediction'] = model.predict(vector)
-        
-        total = len(df)
-        positive = sum(df['Prediction'] == 1)
-        negative = sum(df['Prediction'] == 0)
-        
-        satisfaction = (positive/total) * 100
-        
-        st.write(f"Total Reviews Analysed: {total}")
-        st.write(f"Positive Reviews: {positive}")
-        st.write(f"Negative Reviews: {negative}")
-        st.write(f"Customer Satisfaction Score: {satisfaction:.2f}%")
-        
-        neg_df = df[df['Prediction'] == 0]
-        
-        aspect_count = {}
-        
-        for review in neg_df['Review']:
-            aspects = detect_aspects(review)
-            for asp in aspects:
-                aspect_count[asp] = aspect_count.get(asp,0)+1
-        
-        st.subheader("Negative Issue Breakdown")
-        
-        for asp in aspect_count:
-            percent = (aspect_count[asp]/len(neg_df))*100
-            st.write(f"{asp} Issues: {percent:.2f}%")
+   df = pd.read_csv(uploaded_file)
+
+# Remove hidden spaces from column names
+df.columns = df.columns.str.strip()
+
+# Convert all column names to lower case
+df.columns = df.columns.str.lower()
+
+if 'review' not in df.columns:
+    st.error("Uploaded file must contain a column named 'Review'")
+    st.write("Your columns are:", list(df.columns))
+    st.stop()
+
+df['Cleaned'] = df['review'].apply(clean_text)
+vector = vectorizer.transform(df['Cleaned'])
+
+df['Prediction'] = model.predict(vector)
+
+total = len(df)
+positive = sum(df['Prediction'] == 1)
+negative = sum(df['Prediction'] == 0)
+
+satisfaction = (positive/total) * 100
+
+st.write(f"Total Reviews Analysed: {total}")
+st.write(f"Positive Reviews: {positive}")
+st.write(f"Negative Reviews: {negative}")
+st.write(f"Customer Satisfaction Score: {satisfaction:.2f}%")
+
+neg_df = df[df['Prediction'] == 0]
+
+aspect_count = {}
+
+for review in neg_df['review']:
+    aspects = detect_aspects(review)
+    for asp in aspects:
+        aspect_count[asp] = aspect_count.get(asp,0)+1
+
+st.subheader("Negative Issue Breakdown")
+
+for asp in aspect_count:
+    percent = (aspect_count[asp]/len(neg_df))*100
+    st.write(f"{asp} Issues: {percent:.2f}%")
