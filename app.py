@@ -70,6 +70,7 @@ elif choice == "Bulk Review Analysis":
             st.write("Your columns are:", list(df.columns))
             st.stop()
         df['review'] = df['review'].fillna('').astype(str)
+        df = df[df['review'].str.strip() != '']
         df['Cleaned'] = df['review'].apply(clean_text)
         vector = vectorizer.transform(df['Cleaned'])
         
