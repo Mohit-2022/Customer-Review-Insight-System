@@ -130,6 +130,11 @@
               d) Track monthly satisfaction trends for specific products/restaurants
 
 
+  [Click Here to Use Live App]
+  https://customer-review-insight-system-mwuqd2pjy7jehattabdrq4.streamlit.app/
 
 
-https://customer-review-insight-system-mwuqd2pjy7jehattabdrq4.streamlit.app/
+Author
+Mohit Kushwaha
+LinkedIn: www.linkedin.com/in/mohit-kushwaha-024401112
+
